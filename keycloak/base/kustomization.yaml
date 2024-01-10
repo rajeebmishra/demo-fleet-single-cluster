@@ -1,0 +1,34 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: keycloak
+helmCharts:
+- includeCRDs: true
+  name: keycloak
+  namespace: keycloak
+  releaseName: keycloak
+  repo: https://codecentric.github.io/helm-charts
+  version: 18.4.4
+  valuesFile: values.yaml
+
+resources:
+- namespace.yaml
+- keycloak-credential.yaml
+
+
+configMapGenerator:
+- files:
+  - ddi-realm.json
+  name: ddi-realm
+- files:
+  - theme.css
+  name: login-theme
+  behavior: create
+- name: environment
+  files:
+    - values.yaml=values.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+patches:
+- path: patches/statefulset.yaml

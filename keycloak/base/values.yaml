@@ -1,0 +1,26 @@
+replicas: 1
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+postgresql:
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    runAsNonRoot: true
+    runAsUser: 1001
+    seccompProfile:
+      type: RuntimeDefault
+command:
+extraEnv: |
+  - name: KEYCLOAK_LOGLEVEL
+    value: ERROR
+  - name: WILDFLY_LOGLEVEL
+    value: ERROR

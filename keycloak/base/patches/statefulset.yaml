@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: keycloak
+spec:
+  template:
+    spec:
+      containers:
+      - name: keycloak
+        env:
+        - name: KEYCLOAK_USER
+          value: admin
+        - name: KEYCLOAK_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak-credential
+              key: oidc
+        - name: KEYCLOAK_IMPORT
+          value: /opt/keycloak/data/import/ddi-realm.json
+        volumeMounts:
+        - mountPath: /opt/keycloak/data/import
+          name: ddi-realm
+          readOnly: true
+        - name: login-theme
+          mountPath: /opt/jboss/keycloak/themes/keycloak/login/resources/css/
+      volumes:
+        - name: ddi-realm
+          configMap:
+            name: ddi-realm
+            defaultMode: 365
+            items:
+              - key: ddi-realm.json
+                path: ddi-realm.json
+        - name: login-theme
+          configMap:
+            name: login-theme
+            defaultMode: 0555
+            items:
+              - key: theme.css
+                path: login.css

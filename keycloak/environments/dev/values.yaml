@@ -1,0 +1,6 @@
+command:
+extraEnv: |
+  - name: KEYCLOAK_LOGLEVEL
+    value: DEBUG
+  - name: WILDFLY_LOGLEVEL
+    value: DEBUG
